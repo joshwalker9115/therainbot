@@ -25,6 +25,11 @@ mongoose.connect(db, { useNewUrlParser: true })
 app.use('/api/StationList', StationList);
 //app.use('/api/RainData', RainData);
 
+// Provide SSL code
+app.get('/.well-known/acme-challenge/6qQV-Edt6zj8lM7-xpJBJ9Bmiscdh5sHuTusTuGkDSM', (req, res) => {
+    res.send('6qQV-Edt6zj8lM7-xpJBJ9Bmiscdh5sHuTusTuGkDSM.3CMZPPuAi8ZEWkqSpM-SITuw_EGcp8sU0oDzg3mlVsg')
+});
+
 // Server static assets if in build mode
 if (process.env.NODE_ENV === 'production') {
     //Set static folder
