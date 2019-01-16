@@ -409,33 +409,39 @@ Date,TemperatureHighF,TemperatureAvgF,TemperatureLowF,DewpointHighF,DewpointAvgF
                 width: getColumnWidth(data, "yesterdayP", this.state.yesterdayDate),
                 style: {textAlign: "center"},
                 //can you use...  Cell: d => if(d===undefined/null) {return yellow error triangle?}
-                Cell: d => d.value >= 0.50 ? <div style={{
-                  height: '100%',
-                  width: getColumnWidth(data, "todayP", this.state.todayDate),
-                  textAlign: "center",
-                  backgroundColor: '#FF0000'}}>{d.value}</div> : <div>{d.value}</div>
+                Cell: ( {row, original} ) => { 
+                  return row.yesterdayP >= original.trigger ? <div style={{
+                    height: '100%',
+                    width: getColumnWidth(data, "yesterdayP", this.state.yesterdayDate),
+                    textAlign: "center",
+                    backgroundColor: '#FF0000'}}>{row.yesterdayP}</div> : <div>{row.yesterdayP}</div>
+                  }
               }, {
                 Header: this.state.todayDate,
                 // id: "PrecipitationSumIn1",
                 accessor: "todayP",
                 width: getColumnWidth(data, "todayP", this.state.todayDate),
                 style: {textAlign: "center"},
-                Cell: d => d.value >= 0.50 ? <div style={{
-                  height: '100%',
-                  width: getColumnWidth(data, "todayP", this.state.todayDate),
-                  textAlign: "center",
-                  backgroundColor: '#FF0000'}}>{d.value}</div> : <div>{d.value}</div>
+                Cell: ( {row, original} ) => { 
+                  return row.todayP >= original.trigger ? <div style={{
+                    height: '100%',
+                    width: getColumnWidth(data, "todayP", this.state.todayDate),
+                    textAlign: "center",
+                    backgroundColor: '#FF0000'}}>{row.todayP}</div> : <div>{row.todayP}</div>
+                  }
               }, {
                 Header: 'Total Precipitation',
                 // id: "PrecipitationSumIn2",
                 accessor: "totalP",
                 width: "59px",
                 style: {textAlign: "center"},
-                Cell: d => d.value >= 0.50 ? <div style={{
-                  height: '100%',
-                  width: getColumnWidth(data, "todayP", this.state.todayDate),
-                  textAlign: "center",
-                  backgroundColor: '#FF0000'}}>{d.value}</div> : <div>{d.value}</div>
+                Cell: ( {row, original} ) => { 
+                  return row.totalP >= original.trigger ? <div style={{
+                    height: '100%',
+                    width: getColumnWidth(data, "totalP", "Total Precipitation"),
+                    textAlign: "center",
+                    backgroundColor: '#FF0000'}}>{row.totalP}</div> : <div>{row.totalP}</div>
+                  }
               }, {
                 Header: 'Trigger',
                 // id: "PrecipitationSumIn2",
@@ -452,11 +458,11 @@ Date,TemperatureHighF,TemperatureAvgF,TemperatureLowF,DewpointHighF,DewpointAvgF
                   desc: false
                 }
               ]}
-              showPagination={false}
+              showPagination={true}
               defaultPageSize={this.state.length}
-              style={{
-                  height: "600px" // This will force the table body to overflow and scroll, since there is not enough room
-                }}
+              // style={{
+              //     height: "600px" // This will force the table body to overflow and scroll, since there is not enough room
+              //   }}
               className="-striped -highlight"
               {...checkboxProps}
               SubComponent={row => {
