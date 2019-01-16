@@ -30,6 +30,10 @@ class State extends Component {
             case "/MVP":
                 return "MVP"
         }
+        switch(stateName) {
+            case "/MD":
+                return "Maryland"
+        }
     }
     // componentWillMount() {
     //     console.log("triggering getStations")

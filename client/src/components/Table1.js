@@ -159,10 +159,10 @@ Date,TemperatureHighF,TemperatureAvgF,TemperatureLowF,DewpointHighF,DewpointAvgF
 
     componentDidUpdate(prevProps, prevState) {
       if(this.props !== prevProps) {
-        if (this.props.PPs === []) {this.setState({data: []})}
+        if (this.props.PPs === []) {this.setState({data: [], selection: []})}
         else {
           console.log("going to update with formatData()", this.props.PPs);
-          this.setState({data: []},
+          this.setState({data: [], selection: []},
             () => this.formatData(this.props.PPs, () => {
               console.log("testing", this.props.PPs, this.state.data)
             }));

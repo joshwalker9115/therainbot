@@ -41,14 +41,17 @@ class AppNavBar extends Component {
                         <Collapse isOpen={this.state.isOpen} navbar>
                             <Nav className="ml-auto" navbar>
                             <NavItem>
-                                <NavLink tag={Link} to="/WV" onClick={ this.handleClick('/WV') }>
-                                West Virginia
+                                <NavLink tag={Link} to="/MD" onClick={ this.handleClick('/MD') }>
+                                Maryland
+                                </NavLink>
+                                <NavLink tag={Link} to="/MVP" onClick={ this.handleClick('/MVP') }>
+                                MVP
                                 </NavLink>
                                 <NavLink tag={Link} to="/NC" onClick={ this.handleClick('/NC') }>
                                 North Carolina
                                 </NavLink>
-                                <NavLink tag={Link} to="/MVP" onClick={ this.handleClick('/MVP') }>
-                                MVP
+                                <NavLink tag={Link} to="/WV" onClick={ this.handleClick('/WV') }>
+                                West Virginia
                                 </NavLink>
                             </NavItem>
                             </Nav>

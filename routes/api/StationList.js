@@ -26,6 +26,16 @@ router.get('/WV', (req, res) => {
 });
 
 // @route   GET api/StationList
+// @desc    get all MD projects
+// @access  Public
+router.get('/MD', (req, res) => {
+    console.log("router triggered", req)
+    StationList.find({'stateName': 'Maryland'})
+        //.sort({ RainData: { date: -1 } })
+        .then(data => res.json(data));
+});
+
+// @route   GET api/StationList
 // @desc    get all NC projects
 // @access  Public
 router.get('/NC', (req, res) => {
