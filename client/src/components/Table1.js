@@ -397,7 +397,7 @@ Date,TemperatureHighF,TemperatureAvgF,TemperatureLowF,DewpointHighF,DewpointAvgF
                 accessor: "stationID",//add <a href wunderground here>
                 width: getColumnWidth(data, "stationID", 'Station'),
                 style: {textAlign: "center"},
-                Cell: d =><a href={`${baseURL}${d.value}${tailURL}`}> {d.value} </a>
+                Cell: d =><a href={`${baseURL}${d.value}${tailURL}`} target="_blank"> {d.value} </a>
               }, {
                 Header: this.state.yesterdayDate,
                 accessor: "yesterdayP",
