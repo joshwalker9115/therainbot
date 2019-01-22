@@ -25,17 +25,6 @@ mongoose.connect(db, { useNewUrlParser: true })
 app.use('/api/StationList', StationList);
 //app.use('/api/RainData', RainData);
 
-// Provide SSL codes
-// therainbot.com
-app.get('/.well-known/acme-challenge/6qQV-Edt6zj8lM7-xpJBJ9Bmiscdh5sHuTusTuGkDSM', (req, res) => {
-    res.send('6qQV-Edt6zj8lM7-xpJBJ9Bmiscdh5sHuTusTuGkDSM.3CMZPPuAi8ZEWkqSpM-SITuw_EGcp8sU0oDzg3mlVsg')
-});
-
-// www.therainbot.com
-app.get('/.well-known/acme-challenge/3LK-baGCHHraNGMz2s6ptwmD4XLME-JLKXrUy64KIvI', (req, res) => {
-    res.send('3LK-baGCHHraNGMz2s6ptwmD4XLME-JLKXrUy64KIvI.3CMZPPuAi8ZEWkqSpM-SITuw_EGcp8sU0oDzg3mlVsg')
-});
-
 // Server static assets if in build mode
 if (process.env.NODE_ENV === 'production') {
     //Set static folder
@@ -49,5 +38,3 @@ if (process.env.NODE_ENV === 'production') {
 const port = process.env.PORT || 5000;
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
-
-//wvCall();

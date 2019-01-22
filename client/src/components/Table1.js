@@ -8,16 +8,9 @@ import EditStationModal from './EditStationModal';
 import axios from 'axios';
 import 'react-table/react-table.css'; //test
 
-const CheckboxTable = checkboxHOC(ReactTable);
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-//unneccasary test data
-/*{
-          jobName: "otherTest",
-          stationID: "KWVFALLI8",
-          yesterdayP: "0.01",
-          todayP: "0.98",
-          totalP: "0.99"
-        }*/
+const CheckboxTable = checkboxHOC(ReactTable);
 
 class Csv {
   parseLine(text) {
@@ -83,7 +76,7 @@ class Table extends Component {
 
     getData = (stationID) => {
       try {
-        const urlBase = "https://cors-anywhere.herokuapp.com/https://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=";
+        const urlBase = "https://morning-retreat-23014.herokuapp.com/https://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=";
         const today = this.state.today;
         //const yesterday = today.setDate(today.getDate() -1);
         const yesterday = new Date(new Date().setDate(new Date().getDate()-1));
@@ -99,7 +92,9 @@ class Table extends Component {
           url:url,
           headers: {
               Accept:'text/html',
-              'Content-Type': 'text/html'
+              'Content-Type': 'text/plain',
+              //Origin: '',
+              'X-Requested-With': 'XMLHttpRequest'
               },
         })
       } catch (error) {
@@ -338,7 +333,7 @@ Date,TemperatureHighF,TemperatureAvgF,TemperatureLowF,DewpointHighF,DewpointAvgF
       const { todayDate } = this.state;
       const yesterday = new Date(new Date().setDate(new Date().getDate()-1));
       const baseURL = "https://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=";
-      const tailURL = `&day=${yesterday.getDate()}&month=${yesterday.getMonth()+1}&year=${yesterday.getFullYear()}&dayend=${today.getDate()}&monthend=${today.getMonth()+1}&yearend=${today.getFullYear()}&graphspan=custom&format=1`;
+      const tailURL = `&day=${yesterday.getDate()}&month=${yesterday.getMonth()+1}&year=${yesterday.getFullYear()}&dayend=${today.getDate()}&monthend=${today.getMonth()+1}&yearend=${today.getFullYear()}&graphspan=custom`;
       const { toggleSelection, toggleAll, isSelected } = this;
       const { selectAll } = this.state;
 

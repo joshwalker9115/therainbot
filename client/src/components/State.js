@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {Jumbotron} from 'reactstrap';
-import Table from './Table';
 import Table1 from './Table1';
 import { getStations } from '../actions/itemActions';
 import { connect } from 'react-redux';
@@ -95,63 +94,6 @@ class State extends Component {
     
     render() {
         const {PPs, stateName} = this.state;
-        // const { projects } = this.props.projects;
-        // console.log("hello, jere;")
-        // console.log(projects);
-        // let PPs = [];
-        // PPs = projects.map(obj => [{
-        //     jobName: `${obj.stateList.list.job.name} - 1°`,
-        //     stationID1: obj.stateList.list.job.primary,
-        //     stationID2: obj.stateList.list.job.secondary,
-        //     stationID3: obj.stateList.list.job.tertiary,
-        //     }]);
-        // const temp = projects.map( obj => 
-        //     [{
-        //         jobName: `${obj.job.name} - 1°`,
-        //         stationID: obj.job.primary
-        //     },
-        //     {
-        //         jobName: `${obj.job.name} - 2°`,
-        //         stationID: obj.job.secondary
-        //     },
-        //     {
-        //         jobName: `${obj.job.name} - 3°`,
-        //         stationID: obj.job.tertiary
-        //     }]);
-          //this.setState({PPs: [...this.state.PPs, temp[0]]});
-
-          
-        //this should pull from the "StationList" database (not yet created), pulling the West Virginia list of
-        //  jobNames and stationIDs.  This pulling should be done in the table component, mapped to {data}
-
-        // [{
-        //     jobName: "Berkeley Ridge - 1°",
-        //     stationID: "KWVFALLI8"
-        // },
-        // {
-        //     jobName: "Charles Town - 1°",
-        //     stationID: "KWVCHARL32"
-        // },
-        // {
-        //     jobName: "Charles Town - 2°",
-        //     stationID: "KWVRANSO3"
-        // },
-        // {
-        //     jobName: "Charles Town - 3°",
-        //     stationID: "KWVCHARL41"
-        // },
-        // {
-        //     jobName: "Yorkshire Glen - 1°",
-        //     stationID: "KWVMARTI24"
-        // },
-        // {
-        //     jobName: "Yorkshire Glen - 2°",
-        //     stationID: "KWVKEARN9"
-        // },
-        // {
-        //     jobName: "Yorkshire Glen - 3°",
-        //     stationID: "KWVMARTI21"
-        // }];
         console.log(PPs)
         return (
             <div>
