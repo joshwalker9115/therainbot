@@ -407,7 +407,7 @@ Date,TemperatureHighF,TemperatureAvgF,TemperatureLowF,DewpointHighF,DewpointAvgF
       const { todayDate } = this.state;
       const yesterday = new Date(new Date().setDate(new Date().getDate()-1));
       const baseURL = "https://www.wunderground.com/personal-weather-station/dashboard?ID=";
-      const tailURL = `s${yesterday.getFullYear()}${("0"+yesterday.getDate()).slice(-2)}${("0"+ (yesterday.getMonth()+1)).slice(-2)}/${today.getFullYear()}${("0"+today.getDate()).slice(-2)}${("0"+ (today.getMonth()+1)).slice(-2)}/mcustom`;
+      const tailURL = `#history/s${yesterday.getFullYear()}${("0"+ (yesterday.getMonth()+1)).slice(-2)}${("0"+yesterday.getDate()).slice(-2)}/e${today.getFullYear()}${("0"+ (today.getMonth()+1)).slice(-2)}${("0"+today.getDate()).slice(-2)}/mcustom`;
       const { toggleSelection, toggleAll, isSelected } = this;
       const { selectAll } = this.state;
 
