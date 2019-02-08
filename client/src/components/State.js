@@ -72,7 +72,7 @@ class State extends Component {
             ])
         );
         temp = temp.flat();
-        this.setState({...this.state, PPs: [/* ...this.state.PPs,  */...temp], stateName: this.determineState(props.stateName) }, //Object.assign(...this.state.PPs, ...temp)}, //
+        this.setState({...this.state, PPs: [...temp], stateName: this.determineState(props.stateName) },
             () => console.log(this.state));        
     }
 

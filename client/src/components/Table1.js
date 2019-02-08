@@ -72,8 +72,24 @@ class Table extends Component {
       };
       this.formatData = this.formatData.bind(this);
       this.getData = this.getData.bind(this);
+      const today = this.state.today;
+        //const yesterday = today.setDate(today.getDate() -1);
+      const yesterday = new Date(new Date().setDate(new Date().getDate()-1));
+      this.todayF = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
+      this.yesterdayF = `${yesterday.getFullYear()}-${yesterday.getMonth()+1}-${yesterday.getDate()}`;
     }
+    
+    // confData = (data) => {
+    //   (data) ? data : 'N/A';
+    // }
+    // confTot = (data1, data2) => {
+    //   if (data1 && data2) { return (data1 + data2)}
+    //     else if (data1) { return data1 }
+    //     else if (data2) { return data2 }
+    //     else { return 'N/A' }
+    // }
 
+    //going to repeat code from date, need to obtain through scope to fix
     getData = (stationID) => {
       try {
         const urlBase = "https://morning-retreat-23014.herokuapp.com/https://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=";
@@ -115,36 +131,94 @@ class Table extends Component {
             pulledData = pulledData.replace(/^\s*\n/gm, "");
             pulledData = pulledData.trim();
             pulledData = csv.parse(pulledData);
-            this.setState({
-              ...this.state,
-              data: [...this.state.data,
-                {
-                  _id: PP._id,
-                  jobName: PP.jobName,
-                  stationID: PP.stationID,
-                  trigger: PP. trigger,
-                  yesterdayP: pulledData[0].PrecipitationSumIn,
-                  todayP: pulledData[1].PrecipitationSumIn,
-                  totalP: (+pulledData[0].PrecipitationSumIn + +pulledData[1].PrecipitationSumIn).toFixed(2)}],
-                  todayDate: pulledData[1].Date, //will likely get taken out and passed from a date selector
-                  yesterdayDate: pulledData[0].Date, //will likely get taken out and passed from a date selector
-                }
-            // () => this.setState({...this.state, data: [...(new Set(this.state.data))]})
-            ); //a lot of unnecessary callbacks, remove here and in component didUpdate to fix
+            console.log(pulledData);
+            console.log(pulledData[0].Date, this.todayF, this.yesterdayF);
+            
+            if (pulledData.length === 2) {
+              this.setState({ // make this a function for clean code
+                ...this.state,
+                data: [...this.state.data,
+                  {
+                    _id: PP._id,
+                    jobName: PP.jobName,
+                    stationID: PP.stationID,
+                    trigger: PP.trigger,
+                    yesterdayP: pulledData[0].PrecipitationSumIn,
+                    todayP: pulledData[1].PrecipitationSumIn,
+                    totalP: (+pulledData[0].PrecipitationSumIn + +pulledData[1].PrecipitationSumIn).toFixed(2)
+                  }],
+                    todayDate: this.todayF, //will likely get taken out and passed from a date selector
+                    yesterdayDate: this.yesterdayF, //will likely get taken out and passed from a date selector
+                  }
+              // () => this.setState({...this.state, data: [...(new Set(this.state.data))]})
+              );
+            } else if (pulledData.length === 1 && pulledData[0].Date === this.todayF) {
+              //insert code above for today, repeat with if for yesterday below and repeat for none
+              this.setState({
+                ...this.state,
+                data: [...this.state.data,
+                  {
+                    _id: PP._id,
+                    jobName: PP.jobName,
+                    stationID: PP.stationID,
+                    trigger: PP.trigger,
+                    yesterdayP: 'N/A',
+                    todayP: pulledData[0].PrecipitationSumIn,
+                    totalP: (+pulledData[0].PrecipitationSumIn).toFixed(2)
+                  }],
+                    todayDate: this.todayF, //will likely get taken out and passed from a date selector
+                    yesterdayDate: this.yesterdayF, //will likely get taken out and passed from a date selector
+                  }
+              // () => this.setState({...this.state, data: [...(new Set(this.state.data))]})
+              );
+            } else if (pulledData.length === 1 && pulledData[0].Date === this.yesterdayF) {
+              this.setState({
+                ...this.state,
+                data: [...this.state.data,
+                  {
+                    _id: PP._id,
+                    jobName: PP.jobName,
+                    stationID: PP.stationID,
+                    trigger: PP.trigger,
+                    yesterdayP: pulledData[0].PrecipitationSumIn,
+                    todayP: 'N/A',
+                    totalP: (+pulledData[0].PrecipitationSumIn).toFixed(2)
+                  }],
+                    todayDate: this.todayF, //will likely get taken out and passed from a date selector
+                    yesterdayDate: this.yesterdayF, //will likely get taken out and passed from a date selector
+                  }
+              // () => this.setState({...this.state, data: [...(new Set(this.state.data))]})
+              );
+            } else {
+              this.setState({
+                ...this.state,
+                data: [...this.state.data,
+                  {
+                    _id: PP._id,
+                    jobName: PP.jobName,
+                    stationID: PP.stationID,
+                    trigger: PP.trigger,
+                    yesterdayP: 'N/A',
+                    todayP: 'N/A',
+                    totalP: 'N/A'
+                  }],
+                    todayDate: this.todayF, //will likely get taken out and passed from a date selector
+                    yesterdayDate: this.yesterdayF, //will likely get taken out and passed from a date selector
+                  }
+              // () => this.setState({...this.state, data: [...(new Set(this.state.data))]})
+              );
+            }
           }
           //add an elseif statement to catch error of not reporting.  would ===
 /*
 Date,TemperatureHighF,TemperatureAvgF,TemperatureLowF,DewpointHighF,DewpointAvgF,DewpointLowF,HumidityHigh,HumidityAvg,HumidityLow,PressureMaxIn,PressureMinIn,WindSpeedMaxMPH,WindSpeedAvgMPH,GustSpeedMaxMPH,PrecipitationSumIn<br>
 */
         })
-        .catch(error => {
-          console.log(error)
-        })
+        .catch(error => { console.log(error) })
       )
     }
 
   //   componentWillMount() {
-  //     this.props.getData()
   // }
 
     // componentWillReceiveProps(props) {
@@ -332,8 +406,8 @@ Date,TemperatureHighF,TemperatureAvgF,TemperatureLowF,DewpointHighF,DewpointAvgF
       //console.log(stationID);
       const { todayDate } = this.state;
       const yesterday = new Date(new Date().setDate(new Date().getDate()-1));
-      const baseURL = "https://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=";
-      const tailURL = `&day=${yesterday.getDate()}&month=${yesterday.getMonth()+1}&year=${yesterday.getFullYear()}&dayend=${today.getDate()}&monthend=${today.getMonth()+1}&yearend=${today.getFullYear()}&graphspan=custom`;
+      const baseURL = "https://www.wunderground.com/personal-weather-station/dashboard?ID=";
+      const tailURL = `s${yesterday.getFullYear()}${("0"+yesterday.getDate()).slice(-2)}${("0"+ (yesterday.getMonth()+1)).slice(-2)}/${today.getFullYear()}${("0"+today.getDate()).slice(-2)}${("0"+ (today.getMonth()+1)).slice(-2)}/mcustom`;
       const { toggleSelection, toggleAll, isSelected } = this;
       const { selectAll } = this.state;
 

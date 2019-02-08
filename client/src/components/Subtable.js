@@ -61,7 +61,7 @@ class Subtable extends Component {
 
     getData = () => {  //this should setState to loading true when triggered because data is being fetched
       try {
-        const urlBase = "https://cors-anywhere.herokuapp.com/https://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=";
+        const urlBase = "https://morning-retreat-23014.herokuapp.com/https://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=";
         const stationID = this.props.stationID; //import from Table state? row/subtable state?
         // const yesterday = this.state.today.setDate(-1);
         const todayY = this.state.today.getFullYear();
