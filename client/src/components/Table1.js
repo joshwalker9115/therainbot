@@ -79,16 +79,6 @@ class Table extends Component {
       this.yesterdayF = `${yesterday.getFullYear()}-${yesterday.getMonth()+1}-${yesterday.getDate()}`;
     }
     
-    // confData = (data) => {
-    //   (data) ? data : 'N/A';
-    // }
-    // confTot = (data1, data2) => {
-    //   if (data1 && data2) { return (data1 + data2)}
-    //     else if (data1) { return data1 }
-    //     else if (data2) { return data2 }
-    //     else { return 'N/A' }
-    // }
-
     //going to repeat code from date, need to obtain through scope to fix
     getData = (stationID) => {
       try {
@@ -109,7 +99,6 @@ class Table extends Component {
           headers: {
               Accept:'text/html',
               'Content-Type': 'text/plain',
-              //Origin: '',
               'X-Requested-With': 'XMLHttpRequest'
               },
         })
