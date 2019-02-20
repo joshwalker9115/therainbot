@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Jumbotron} from 'reactstrap';
+import Table from './Table';
 import Table1 from './Table1';
 import { getStations } from '../actions/itemActions';
 import { connect } from 'react-redux';
@@ -48,7 +49,6 @@ class State extends Component {
 
         // componentWillReceiveProps is deprecated... consider moving this as a callback
         // to the componentDidUpdate under if (this.props.projects.projects !== []) {...}
-        console.log(props)
         let temp = props.projects.projects.map( obj => 
             ([
                 {
@@ -98,7 +98,7 @@ class State extends Component {
         return (
             <div>
                 {stateName && <h3 className="text-center">{stateName}</h3>}
-                <Table1 PPs={PPs} stateName={stateName} />
+                <Table PPs={PPs} stateName={stateName} />
             </div>
         );
     }

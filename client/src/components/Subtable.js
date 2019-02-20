@@ -77,10 +77,11 @@ class Subtable extends Component {
           method:'get',
           url:url,
           headers: {
-              Accept:'text/html',
-              'Content-Type': 'text/html'
-              },
-        })
+            Accept:'text/html',
+            'Content-Type': 'text/plain',
+            'X-Requested-With': 'XMLHttpRequest'
+            },
+      })
       } catch (error) {
         console.error(error)
       }
@@ -97,7 +98,10 @@ class Subtable extends Component {
             pulledData = pulledData.replace(/^\s*\n/gm, "");
             pulledData = csv.parse(pulledData);
             console.log(pulledData);
-            this.setState({data: pulledData});
+            let combinedData = [];
+            const every_nth = (arr, nth) => arr.filter((e, i) => i % nth === nth - 1);
+            combinedData = every_nth(pulledData, 3);
+            this.setState({data: combinedData});
           }
         })
         .catch(error => {

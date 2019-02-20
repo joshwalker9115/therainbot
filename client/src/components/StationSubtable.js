@@ -1,15 +1,11 @@
 import ReactTable from 'react-table';
 import checkboxHOC from "react-table/lib/hoc/selectTable";
-import {render} from 'react-dom';
 import React, { Component } from 'react';
-import Subtable from './Subtable';
-import StationSubtable from './StationSubtable';
-import ProjectModal from './StationModal';
-import EditStationModal from './EditStationModal';
 import axios from 'axios';
-import 'react-table/react-table.css'; //test
+import 'react-table/react-table.css';
 
-axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+import Subtable from './Subtable';
+import { stat } from 'fs';
 
 const CheckboxTable = checkboxHOC(ReactTable);
 
@@ -55,33 +51,26 @@ class Csv {
 
 const csv = new Csv();
 
-class Table extends Component {
+
+class StationSubtable extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        PPs: this.props.PPs, //most likely wont set to state, just use componentDidUpdate below and if=> update!
-        data: [],
-        yesterdayDate: '',
-        todayDate: '',
-        today: new Date(),
+        data: [this.props.row1.original],
+        stationID: this.props.stationID,
+        today: this.props.today, //change this to inherit date
+        todayDate: this.props.todayDate,
+        yesterdayDate: this.props.yesterdayDate,
         selection: [],
         selectAll: false,
         toEdit: {},
-        modal: false,
-        type: '',
-        loading: this.props.loading
+        //PPs: this.props.PPs
       };
       this.formatData = this.formatData.bind(this);
       this.getData = this.getData.bind(this);
-      const today = this.state.today;
-        //const yesterday = today.setDate(today.getDate() -1);
-      const yesterday = new Date(new Date().setDate(new Date().getDate()-1));
-      this.todayF = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
-      this.yesterdayF = `${yesterday.getFullYear()}-${yesterday.getMonth()+1}-${yesterday.getDate()}`;
     }
-    
-    //going to repeat code from date, need to obtain through scope to fix
-    getData = (stationID) => {
+
+    getData = (stationID) => { // needs to be rewritten as async await to prevent false N/As
       try {
         const urlBase = "https://morning-retreat-23014.herokuapp.com/https://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=";
         const today = this.state.today;
@@ -110,7 +99,7 @@ class Table extends Component {
     
     formatData = async (PPs) => {
       //this.setState({ data: [] }); //if going to use this, ensure the rest of this function is the callback!
-      console.log("formatData() called")
+      console.log("formatData() called", PPs)
       let pulledData = [];
       //const stationID = this.state.data[0].stationID;
       PPs.map( PP => this.getData(PP.stationID) //map over array of SIDs here
@@ -121,8 +110,6 @@ class Table extends Component {
             pulledData = pulledData.replace(/^\s*\n/gm, "");
             pulledData = pulledData.trim();
             pulledData = csv.parse(pulledData);
-            console.log(pulledData);
-            console.log(pulledData[0].Date, this.todayF, this.yesterdayF);
             
             if (pulledData.length === 2) {
               this.setState({ // make this a function for clean code
@@ -199,42 +186,43 @@ class Table extends Component {
               );
             }
           }
-          //add an elseif statement to catch error of not reporting.  would ===
-/*
-Date,TemperatureHighF,TemperatureAvgF,TemperatureLowF,DewpointHighF,DewpointAvgF,DewpointLowF,HumidityHigh,HumidityAvg,HumidityLow,PressureMaxIn,PressureMinIn,WindSpeedMaxMPH,WindSpeedAvgMPH,GustSpeedMaxMPH,PrecipitationSumIn<br>
-*/
         })
         .catch(error => { console.log(error) })
       )
     }
 
-    reduceData = (PP) => {
-      return PP.jobName.includes('1°');
-    }
-
-    getName = (PP) => {
-      return PP.jobName.includes('PP')
-    }
-  //   componentWillMount() {
-  // }
-
-    // componentWillReceiveProps(props) {
-    //   this.setState({...this.state, PPs: [...this.state.PPs, ...props.PPs]},
-    //     function() {this.formatData()});
+    // componentDidUpdate(prevProps, prevState) {
+    //   if(this.props !== prevProps) {
+    //     if (this.props.PPs === []) {this.setState({data: [], selection: []})}
+    //     else {
+    //       console.log("in the first subtable, here the props", this.props);
+    //       this.setState({data: [], selection: []},
+    //         () => this.formatData(this.props.PPs, () => {
+    //           console.log("testing", this.props.PPs, this.state.data)
+    //         }));
+    //     }
+    //   }
     // }
 
-    componentDidUpdate(prevProps, prevState) {
-      if(this.props !== prevProps) {
-        if (this.props.PPs === []) {this.setState({data: [], selection: []})}
-        else {
-          this.setState({data: [], selection: [], /*PPs: this.props.PPs*/},
-            () => this.formatData(this.props.PPs.filter(this.reduceData)));
-        }
-      }
+    componentDidMount() {
+      console.log("in the did mount", this._mounted, this.props);
+      this._mounted = true
+      this.formatData(this.props.PPs.slice(1,3));
     }
-    
-    // componentDidMount() {
-    //   this.formatData();// here is where we should map over a state based list of stations
+
+    componentWillUnmount () {
+      this._mounted = false
+   }
+
+    // static getDerivedStateFromProps(props, state) {
+    //   console.log(props);
+    //   if (props !== state) {
+    //     this.formatData(props.PPs, () => {
+    //     return {
+    //       data: [...props, props.row1.original]
+    //     }})
+
+    //   }
     // }
 
     toggleSelection = (key, shift, row) => {
@@ -311,73 +299,27 @@ Date,TemperatureHighF,TemperatureAvgF,TemperatureLowF,DewpointHighF,DewpointAvgF
       });
     }
 
-    handleClick = (param) => (event) => {
-      if (this.state.selection.length > 1) {
-        switch (param) {
-          case "Add":
-            this.setState({modal: true, selection: [], type: param});
-            break;
-          case "Edit":
-            alert("You can only edit one project at a time");
-            break;
-        }
-      } else if (this.state.selection < 1) {
-        switch (param) {
-          case "Add":
-            this.setState({modal: true, type: param});
-            break;
-          case "Edit":
-            alert("Select a Station to edit");
-            break;
-        }
-      } else {
-        switch (param) {
-          case "Add":
-            this.setState({modal: true, selection: [], toEdit: {}, type: param});
-            break;
-          case "Edit": 
-            let a = this.state.selection[0].replace(/_P$|_S$|_T$/g,'');
-            const b = this.props.PPs.filter(PP => { //better off using filter here? YES :)
-              return PP._id.includes(a) //regex the end off of the _id, and -5 from the degree symbol, pass to toEdit down to editModal
-            });
-            const p = b.find(pa => a+'_P' === pa._id);
-            const s = b.find(sa => a+'_S' === sa._id);
-            const t = b.find(ta => a+'_T' === ta._id);
-            this.setState({
-              type: param,
-              toEdit: {
-                _id: a,
-                jobName: b[0].jobName.slice(0,-5),
-                stateName: this.props.stateName,
-                primary: p.stationID,
-                secondary: s.stationID,
-                tertiary: t.stationID,
-                trigger: b[0].trigger
-              },
-              modal: true
-            });
-          };
-        }
-      event.preventDefault();
-    };
-
     render() {
-      const { data, today, todayDate, PPs } = this.state;
+      // const stationID = stationID; //import from Table state? row/subtable state?
+      const { data, today, todayDate, yesterdayDate } = this.state;
+      console.log("here is a test", data, today, todayDate, yesterdayDate);
+      //const stationID = this.state.data[0].stationID;
+      //console.log(stationID);
       const yesterday = new Date(new Date().setDate(new Date().getDate()-1));
       const baseURL = "https://www.wunderground.com/personal-weather-station/dashboard?ID=";
       const tailURL = `#history/s${yesterday.getFullYear()}${("0"+ (yesterday.getMonth()+1)).slice(-2)}${("0"+yesterday.getDate()).slice(-2)}/e${today.getFullYear()}${("0"+ (today.getMonth()+1)).slice(-2)}${("0"+today.getDate()).slice(-2)}/mcustom`;
       const { toggleSelection, toggleAll, isSelected } = this;
       const { selectAll } = this.state;
 
-      const getColumnWidth = (rows, accessor, headerText) => {
-        const maxWidth = 400
-        const magicSpacing = 10
-        const cellLength = Math.max(
-          ...rows.map(row => (`${row[accessor]}` || '').length),
-          headerText.length,
-        )
-        return Math.min(maxWidth, cellLength * magicSpacing)
-      }
+      // const getColumnWidth = (rows, accessor, headerText) => {
+      //   const maxWidth = 400
+      //   const magicSpacing = 10
+      //   const cellLength = Math.max(
+      //     ...rows.map(row => (`${row[accessor]}` || '').length),
+      //     headerText.length,
+      //   )
+      //   return Math.min(maxWidth, cellLength * magicSpacing)
+      // }
   
       const checkboxProps = {
         selectAll,
@@ -397,111 +339,99 @@ Date,TemperatureHighF,TemperatureAvgF,TemperatureLowF,DewpointHighF,DewpointAvgF
           };
         }
       };
+
+      //this.formatData(this.props.PPs);
   
       return (
         <div>
-          <span>
-            <EditStationModal 
-              handleClick={this.handleClick.bind(this)}
-              toggle={this.toggle.bind(this)}
-              modal={this.state.modal}
-              type={this.state.type}
-              _id={this.state.toEdit._id ? this.state.toEdit._id : null}
-              jobName={this.state.toEdit.jobName}
-              stateName={this.state.toEdit.stateName}
-              primary={this.state.toEdit.primary}
-              secondary={this.state.toEdit.secondary}
-              tertiary={this.state.toEdit.tertiary}
-              trigger={this.state.toEdit.trigger}
-            />
-          </span>
-            <CheckboxTable
-              ref={row => (this.checkboxTable = row)}
-              data={data}
-              columns={[
+          <CheckboxTable
+            ref={row => (this.checkboxTable = row)}
+            data={data}
+            columns={[
+            {
+              Header: 'Job Name',
+              accessor: "jobName",
+              width: "175px"
+            }, {
+              Header: 'Station',
+              accessor: "stationID",//add <a href wunderground here>
+              width: '120px',
+              style: {textAlign: "center"},
+              Cell: d =><a href={`${baseURL}${d.value}${tailURL}`} target="_blank"> {d.value} </a>
+            }, {
+              Header: yesterdayDate, // grab this from the pulled Data
+              accessor: "yesterdayP",
+              width: '90px',
+              style: {textAlign: "center"},
+              //can you use...  Cell: d => if(d===undefined/null) {return yellow error triangle?}
+              Cell: ( {row, original} ) => { 
+                return row.yesterdayP >= original.trigger ? <div style={{
+                  height: '100%',
+                  width: '90px',
+                  textAlign: "center",
+                  backgroundColor: '#FF0000'}}>{row.yesterdayP}</div> : <div>{row.yesterdayP}</div>
+                }
+            }, {
+              Header: todayDate, // grab this from the pulled Data
+              // id: "PrecipitationSumIn1",
+              accessor: "todayP",
+              width: '90px',
+              style: {textAlign: "center"},
+              Cell: ( {row, original} ) => { 
+                return row.todayP >= original.trigger ? <div style={{
+                  height: '100%',
+                  width: '90px',
+                  textAlign: "center",
+                  backgroundColor: '#FF0000'}}>{row.todayP}</div> : <div>{row.todayP}</div>
+                }
+            }, {
+              Header: 'Total',
+              // id: "PrecipitationSumIn2",
+              accessor: "totalP",
+              width: "59px",
+              style: {textAlign: "center"},
+              Cell: ( {row, original} ) => { 
+                return row.totalP >= original.trigger ? <div style={{
+                  height: '100%',
+                  width: '59px',
+                  textAlign: "center",
+                  backgroundColor: '#FF0000'}}>{row.totalP}</div> : <div>{row.totalP}</div>
+                }
+            } //,{
+            //   Header: 'Trigger',
+            //   // id: "PrecipitationSumIn2",
+            //   accessor: "trigger",
+            //   width: getColumnWidth(data, "trigger", 'Trigger'),
+            //   style: {textAlign: "center"}
+            //   //Cell: d => d.value >= 0.50 ? <div style={{width: '100%', height: '100%', backgroundColor: '#FF0000'}}> {d.value} </div> : <div> {d.value}</div>
+            // }
+          ]}
+
+            defaultSorted={[
               {
-                Header: 'Job Name',
-                accessor: "jobName",
-                width: "175px"
-              }, {
-                Header: 'Station',
-                accessor: "stationID",//add <a href wunderground here>
-                width: getColumnWidth(data, "stationID", 'Station'),
-                style: {textAlign: "center"},
-                Cell: d =><a href={`${baseURL}${d.value}${tailURL}`} target="_blank"> {d.value} </a>
-              }, {
-                Header: this.state.yesterdayDate,
-                accessor: "yesterdayP",
-                width: getColumnWidth(data, "yesterdayP", this.state.yesterdayDate),
-                style: {textAlign: "center"},
-                //can you use...  Cell: d => if(d===undefined/null) {return yellow error triangle?}
-                Cell: ( {row, original} ) => { 
-                  return row.yesterdayP >= original.trigger ? <div style={{
-                    height: '100%',
-                    width: getColumnWidth(data, "yesterdayP", this.state.yesterdayDate),
-                    textAlign: "center",
-                    backgroundColor: '#FF0000'}}>{row.yesterdayP}</div> : <div>{row.yesterdayP}</div>
-                  }
-              }, {
-                Header: this.state.todayDate,
-                // id: "PrecipitationSumIn1",
-                accessor: "todayP",
-                width: getColumnWidth(data, "todayP", this.state.todayDate),
-                style: {textAlign: "center"},
-                Cell: ( {row, original} ) => { 
-                  return row.todayP >= original.trigger ? <div style={{
-                    height: '100%',
-                    width: getColumnWidth(data, "todayP", this.state.todayDate),
-                    textAlign: "center",
-                    backgroundColor: '#FF0000'}}>{row.todayP}</div> : <div>{row.todayP}</div>
-                  }
-              }, {
-                Header: 'Total Precipitation',
-                // id: "PrecipitationSumIn2",
-                accessor: "totalP",
-                width: "59px",
-                style: {textAlign: "center"},
-                Cell: ( {row, original} ) => { 
-                  return row.totalP >= original.trigger ? <div style={{
-                    height: '100%',
-                    width: getColumnWidth(data, "totalP", "Total Precipitation"),
-                    textAlign: "center",
-                    backgroundColor: '#FF0000'}}>{row.totalP}</div> : <div>{row.totalP}</div>
-                  }
-              }, {
-                Header: 'Trigger',
-                // id: "PrecipitationSumIn2",
-                accessor: "trigger",
-                width: getColumnWidth(data, "trigger", 'Trigger'),
-                style: {textAlign: "center"}
-                //Cell: d => d.value >= 0.50 ? <div style={{width: '100%', height: '100%', backgroundColor: '#FF0000'}}> {d.value} </div> : <div> {d.value}</div>
+                id: "jobName",
+                desc: false
               }
             ]}
-
-              defaultSorted={[
-                {
-                  id: "jobName",
-                  desc: false
-                }
-              ]}
-              showPagination={true}
-              defaultPageSize={this.state.length}
-              // style={{
-              //     height: "600px" // This will force the table body to overflow and scroll, since there is not enough room
-              //   }}
-              className="-striped -highlight"
-              {...checkboxProps}
-              SubComponent={row => {
-                return (
-                  <div>
-                    <StationSubtable PPs={this.props.PPs.filter((PP) => PP.jobName.includes(row.original.jobName.slice(0,-5)))} row1={row} stationID={row.original.stationID} today={today} todayDate={this.state.todayDate} yesterdayDate={this.state.yesterdayDate}/>
-                  </div>
-                );
-              }}
-            />
+            showPagination={false}
+            defaultPageSize={3}
+            // style={{
+            //     height: "600px" // This will force the table body to overflow and scroll, since there is not enough room
+            //   }}
+            className="-striped -highlight"
+            {...checkboxProps}
+            SubComponent={row => {
+              return (
+                <div>
+                  <Subtable stationID={row.original.stationID} today={today}/>
+                </div>
+              );
+            }}
+          />
         </div>
       );   
     }
   }
 
-export default Table;
+  
+  export default StationSubtable;
