@@ -59,8 +59,8 @@ class StationSubtable extends Component {
         data: [this.props.row1.original],
         stationID: this.props.stationID,
         today: this.props.today, //change this to inherit date
-        todayDate: this.props.todayDate,
-        yesterdayDate: this.props.yesterdayDate,
+        //todayDate: this.props.todayDate,
+        //yesterdayDate: this.props.yesterdayDate,
         selection: [],
         selectAll: false,
         toEdit: {},
@@ -124,8 +124,8 @@ class StationSubtable extends Component {
                     todayP: pulledData[1].PrecipitationSumIn,
                     totalP: (+pulledData[0].PrecipitationSumIn + +pulledData[1].PrecipitationSumIn).toFixed(2)
                   }],
-                    todayDate: this.todayF, //will likely get taken out and passed from a date selector
-                    yesterdayDate: this.yesterdayF, //will likely get taken out and passed from a date selector
+                    todayDate: this.props.todayDate, //will likely get taken out and passed from a date selector
+                    yesterdayDate: this.props.yesterdayDate, //will likely get taken out and passed from a date selector
                   }
               // () => this.setState({...this.state, data: [...(new Set(this.state.data))]})
               );
@@ -143,8 +143,8 @@ class StationSubtable extends Component {
                     todayP: pulledData[0].PrecipitationSumIn,
                     totalP: (+pulledData[0].PrecipitationSumIn).toFixed(2)
                   }],
-                    todayDate: this.todayF, //will likely get taken out and passed from a date selector
-                    yesterdayDate: this.yesterdayF, //will likely get taken out and passed from a date selector
+                    todayDate: this.props.todayDate, //will likely get taken out and passed from a date selector
+                    yesterdayDate: this.props.yesterdayDate, //will likely get taken out and passed from a date selector
                   }
               // () => this.setState({...this.state, data: [...(new Set(this.state.data))]})
               );
@@ -161,8 +161,8 @@ class StationSubtable extends Component {
                     todayP: 'N/A',
                     totalP: (+pulledData[0].PrecipitationSumIn).toFixed(2)
                   }],
-                    todayDate: this.todayF, //will likely get taken out and passed from a date selector
-                    yesterdayDate: this.yesterdayF, //will likely get taken out and passed from a date selector
+                    todayDate: this.props.todayDate, //will likely get taken out and passed from a date selector
+                    yesterdayDate: this.props.yesterdayDate, //will likely get taken out and passed from a date selector
                   }
               // () => this.setState({...this.state, data: [...(new Set(this.state.data))]})
               );
@@ -179,8 +179,8 @@ class StationSubtable extends Component {
                     todayP: 'N/A',
                     totalP: 'N/A'
                   }],
-                    todayDate: this.todayF, //will likely get taken out and passed from a date selector
-                    yesterdayDate: this.yesterdayF, //will likely get taken out and passed from a date selector
+                    todayDate: this.props.todayDate, //will likely get taken out and passed from a date selector
+                    yesterdayDate: this.props.yesterdayDate, //will likely get taken out and passed from a date selector
                   }
               // () => this.setState({...this.state, data: [...(new Set(this.state.data))]})
               );
@@ -359,7 +359,7 @@ class StationSubtable extends Component {
               style: {textAlign: "center"},
               Cell: d =><a href={`${baseURL}${d.value}${tailURL}`} target="_blank"> {d.value} </a>
             }, {
-              Header: yesterdayDate, // grab this from the pulled Data
+              Header: this.props.yesterdayDate, // grab this from the pulled Data
               accessor: "yesterdayP",
               width: '90px',
               style: {textAlign: "center"},
@@ -372,7 +372,7 @@ class StationSubtable extends Component {
                   backgroundColor: '#FF0000'}}>{row.yesterdayP}</div> : <div>{row.yesterdayP}</div>
                 }
             }, {
-              Header: todayDate, // grab this from the pulled Data
+              Header: this.props.todayDate, // grab this from the pulled Data
               // id: "PrecipitationSumIn1",
               accessor: "todayP",
               width: '90px',

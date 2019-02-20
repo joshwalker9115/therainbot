@@ -494,7 +494,7 @@ Date,TemperatureHighF,TemperatureAvgF,TemperatureLowF,DewpointHighF,DewpointAvgF
               SubComponent={row => {
                 return (
                   <div>
-                    <StationSubtable PPs={this.props.PPs.filter((PP) => PP.jobName.includes(row.original.jobName.slice(0,-5)))} row1={row} stationID={row.original.stationID} today={today} todayDate={this.state.todayDate} yesterdayDate={this.state.yesterdayDate}/>
+                    <StationSubtable PPs={this.props.PPs.filter((PP) => PP.jobName.includes(row.original.jobName.slice(0,-5)))} row1={row} stationID={row.original.stationID} today={today} todayDate={this.todayF} yesterdayDate={this.yesterdayF}/>
                   </div>
                 );
               }}
