@@ -27,16 +27,37 @@ class AppNavBar extends Component {
         });
     };
 
+    determineState = (stateName) => {
+        switch(stateName) {
+            case "/WV":
+                return "West Virginia"
+        }
+        switch(stateName) {
+            case "/NC":
+                return "North Carolina"
+        }
+        switch(stateName) {
+            case "/MVP":
+                return "MVP"
+        }
+        switch(stateName) {
+            case "/MD":
+                return "Maryland"
+        }
+    }
+
     componentWillReceiveProps = (nextProps) => {
       this.setState({ isOpen: nextProps.isOpen})
     }
     
     render() { 
+        let stateName = this.determineState(this.props.stateName);
         return(
             <div>
-                <Navbar color="dark" dark expand="sa" className="mb-5">
+                <Navbar color="dark" dark expand="sa" className="mb-4">
                     <Container>
                         <NavbarBrand tag={Link} to="/">RainBot</NavbarBrand>
+                        {stateName && <h4 className="nav-center">{stateName}</h4>}
                         <NavbarToggler onClick= {this.toggle} />
                         <Collapse isOpen={this.state.isOpen} navbar>
                             <Nav className="ml-auto" navbar>

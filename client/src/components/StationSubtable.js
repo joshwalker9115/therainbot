@@ -59,8 +59,8 @@ class StationSubtable extends Component {
         data: [this.props.row1.original],
         stationID: this.props.stationID,
         today: this.props.today, //change this to inherit date
-        //todayDate: this.props.todayDate,
-        //yesterdayDate: this.props.yesterdayDate,
+        todayDate: this.props.todayDate,
+        yesterdayDate: this.props.yesterdayDate,
         selection: [],
         selectAll: false,
         toEdit: {},

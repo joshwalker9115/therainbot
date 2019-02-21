@@ -27,8 +27,13 @@
 }
 
 .mb-5 {
-    margin-bottom: 1rem;
+    margin-bottom: 0rem;
 }
 .navbar-brand {
     font-size: 2rem;
+}
+
+.nav-center {
+    text-align: center;
+    color: white;
 }

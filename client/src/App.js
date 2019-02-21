@@ -34,7 +34,7 @@ class App extends Component {
       <Provider store={store}>
         <Router>
           <div className="App">
-            <AppNavBar handleClick={this.handleClick.bind(this)} isOpen={false}/>
+            <AppNavBar handleClick={this.handleClick.bind(this)} stateName={this.state.stateName} isOpen={false}/>
             <Container fluid>
               <State stateName={this.state.stateName} />
             </Container>

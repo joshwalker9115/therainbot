@@ -94,10 +94,8 @@ class State extends Component {
     
     render() {
         const {PPs, stateName} = this.state;
-        console.log(PPs)
         return (
             <div>
-                {stateName && <h3 className="text-center">{stateName}</h3>}
                 <Table PPs={PPs} stateName={stateName} />
             </div>
         );

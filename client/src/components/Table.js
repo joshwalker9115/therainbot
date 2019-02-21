@@ -400,7 +400,7 @@ Date,TemperatureHighF,TemperatureAvgF,TemperatureLowF,DewpointHighF,DewpointAvgF
   
       return (
         <div>
-          <span>
+          <span style={{"padding-top" : "0rem"}}>
             <EditStationModal 
               handleClick={this.handleClick.bind(this)}
               toggle={this.toggle.bind(this)}
