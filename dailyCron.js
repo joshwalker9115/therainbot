@@ -280,5 +280,5 @@ ${emailHeader}
 
 // WVCron.start();
 // NCCron.start();
-MVPCron.start();
+// MVPCron.start();
 console.log("Jobs started");

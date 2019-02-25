@@ -312,6 +312,7 @@ Date,TemperatureHighF,TemperatureAvgF,TemperatureLowF,DewpointHighF,DewpointAvgF
     }
 
     handleClick = (param) => (event) => {
+      if (param === "Email") {this.setState({modal: true, type: param})}
       if (this.state.selection.length > 1) {
         switch (param) {
           case "Add":
@@ -400,12 +401,13 @@ Date,TemperatureHighF,TemperatureAvgF,TemperatureLowF,DewpointHighF,DewpointAvgF
   
       return (
         <div>
-          <span style={{"padding-top" : "0rem"}}>
+          <span>
             <EditStationModal 
               handleClick={this.handleClick.bind(this)}
               toggle={this.toggle.bind(this)}
               modal={this.state.modal}
               type={this.state.type}
+              data={this.state.data}
               _id={this.state.toEdit._id ? this.state.toEdit._id : null}
               jobName={this.state.toEdit.jobName}
               stateName={this.state.toEdit.stateName}
